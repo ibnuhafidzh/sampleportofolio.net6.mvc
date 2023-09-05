@@ -1,0 +1,90 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<section id="experience" class="parallax-section">
+    <div class="container">
+        <div class="row"><br /><br /> <br /><br /></div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="experience-thumb">
+                   
+                    <div class="wow fadeInUp section-title" data-wow-delay="0.8s">
+                        <div class="card-text">
+                            <div class="table-responsive">
+                                <table id="tblFiles" class="table color-white" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>PDF Name</th>
+                                            <th>Info</th>
+                                            <th>Command</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Resume Only Profesional</td>
+                                            <td>Resume Profesional</td>
+                                            <td>
+                                                <a class="wow fadeInUp btn btn-success download" href="#" rel='1'>Download</a>
+                                              
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Resume Profesional And Freelance</td>
+                                            <td>Resume Profesional And Freelance Jobs</td>
+                                            <td>
+                                                <a class="wow fadeInUp btn btn-success download" href="#" rel='2'>Download</a>
+                                            </td>
+                                        </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <a asp-controller="Home" asp-action="LogOut"
+                       class="wow fadeInUp section-btn btn btn-success"
+                       data-wow-delay="1.4s">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+@section scripts{
+   
+    <script type="text/javascript">
+        $(function () {
+            $("[id*=tblFiles] .download").click(function () {
+                var fileId = $(this).attr("rel");
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "Api/Download/DownloadFile/" + fileId, true);
+                xhr.responseType = "blob";
+                xhr.onload = function (e) {
+                    if (this.status == 200) {
+                        var blob = this.response;
+
+                        /* Get filename from Content-Disposition header */
+                        var filename = "";
+                        var disposition = xhr.getResponseHeader('Content-Disposition');
+                        if (disposition && disposition.indexOf('attachment') !== -1) {
+                            var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                            var matches = filenameRegex.exec(disposition);
+                            if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                        }
+
+                        // This does the trick
+                        var a = document.createElement('a');
+                        a.href = window.URL.createObjectURL(blob);
+                        a.download = filename;
+                        a.dispatchEvent(new MouseEvent('click'));
+                    }
+                }
+                xhr.send();
+               
+            });
+        });
+
+    </script>
+}
